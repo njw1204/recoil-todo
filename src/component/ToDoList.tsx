@@ -21,7 +21,7 @@ interface CategoryFormData {
 const CategoryContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: start;
+  align-items: baseline;
 `;
 
 const CategorySelectContainer = styled.div`
@@ -48,7 +48,7 @@ function ToDoList() {
     },
   });
   const categoryFormWatch = watchCategoryForm();
-  const isDefaultCategory = Object.values<string>(DefaultToDoCategoryName).includes(selectedCategory.name);
+  const isDefaultCategory = selectedCategory ? Object.values<string>(DefaultToDoCategoryName).includes(selectedCategory.name) : false;
 
   if (categoryFormWatch.categoryName !== categoryFormWatch.categoryName.toUpperCase()) {
     setCategoryFormValue("categoryName", categoryFormWatch.categoryName.toUpperCase());
@@ -56,14 +56,11 @@ function ToDoList() {
 
   const onInputCategoriesSelect = (event: React.FormEvent<HTMLSelectElement>) => {
     const category = categories.find((category) => category.id === event.currentTarget.value);
-
-    if (category) {
-      setSelectedCategory(category);
-    }
+    setSelectedCategory(category ?? null);
   };
 
   const onClickRemoveCategoryButton = () => {
-    if (isDefaultCategory) {
+    if (isDefaultCategory || !selectedCategory) {
       return;
     }
 
@@ -107,12 +104,13 @@ function ToDoList() {
     <div>
       <CategoryContainer>
         <CategorySelectContainer>
-          <select onInput={onInputCategoriesSelect} value={selectedCategory.id}>
+          <select onInput={onInputCategoriesSelect} value={selectedCategory?.id ?? ""}>
+            <option value="">==Category==</option>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>{category.name}</option>
             ))}
           </select>
-          {!isDefaultCategory && <button onClick={onClickRemoveCategoryButton}>&times;</button>}
+          {(!isDefaultCategory && selectedCategory) && <button onClick={onClickRemoveCategoryButton}>&times;</button>}
         </CategorySelectContainer>
         <form onSubmit={handleCategoryFormSubmit(onSubmitAddCategoryForm)}>
           <input

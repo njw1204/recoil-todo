@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { selectedCategoryState, toDosState } from '../atom/to-do';
+import { categoriesState, selectedCategoryState, toDosState } from '../atom/to-do';
 import { FormError } from '../style/form-error';
 import styled from "styled-components";
 import { getRandomId } from "../util/to-do-util";
@@ -25,6 +25,7 @@ const TaskInput = styled.input.attrs({ placeholder: "Write a Task...", autoCompl
 
 function ToDoCreator() {
   const setToDos = useSetRecoilState(toDosState);
+  const [ firstCategory ] = useRecoilValue(categoriesState);
   const selectedCategory = useRecoilValue(selectedCategoryState);
 
   const { register, setValue, handleSubmit, formState: { errors } } = useForm<ToDoFormData>({
@@ -35,7 +36,7 @@ function ToDoCreator() {
 
   const onSubmit = (data: ToDoFormData) => {
     setToDos((toDos) => [
-      { id: getRandomId(), category: selectedCategory, contents: data.toDo },
+      { id: getRandomId(), category: selectedCategory ?? firstCategory, contents: data.toDo },
       ...toDos
     ]);
     setValue("toDo", "");
@@ -48,8 +49,8 @@ function ToDoCreator() {
           {...register("toDo", {
             required: "Please write a task",
             maxLength: {
-              value: 20,
-              message: "Max 20 characters are allowed"
+              value: 100,
+              message: "Max 100 characters are allowed"
             },
           })}/>
         <button>Add</button>

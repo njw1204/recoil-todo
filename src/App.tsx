@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const AppContainer = styled.div`
   padding: 32px 16px;
-  width: 500px;
+  width: 720px;
   margin: 0 auto;
 `;
 

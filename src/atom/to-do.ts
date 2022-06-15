@@ -47,9 +47,9 @@ export const categoriesState = atom<ToDoCategoryAtom[]>({
   ],
 });
 
-export const selectedCategoryState = atom<ToDoCategoryAtom>({
+export const selectedCategoryState = atom<ToDoCategoryAtom | null>({
   key: "selectedCategory",
-  default: JSON.parse(window.localStorage.getItem("selectedCategory") || JSON.stringify(defaultToDoCategories[0])),
+  default: JSON.parse(window.localStorage.getItem("selectedCategory") || "null"),
   effects: [
     ({ onSet }) => {
       onSet((newValue) => {
@@ -65,6 +65,10 @@ export const showingToDosSelector = selector({
     const toDos = get(toDosState);
     const selectedCategory = get(selectedCategoryState);
 
-    return toDos.filter((toDo) => toDo.category.id === selectedCategory.id);
+    if (selectedCategory) {
+      return toDos.filter((toDo) => toDo.category.id === selectedCategory.id);
+    } else {
+      return toDos;
+    }
   },
 })

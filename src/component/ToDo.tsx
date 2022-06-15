@@ -8,7 +8,7 @@ const Task = styled.div`
   justify-content: space-between;
   align-items: start;
   margin-top: 8px;
-  padding: 16px 8px;
+  padding: 10px 8px;
   background-color: ${(props) => darken(0.1, props.theme.bgColor)};
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   word-break: break-all;
@@ -24,6 +24,15 @@ const TaskContents = styled.div`
   button {
     margin-right: 8px;
   }
+`;
+
+const TaskCategory = styled.div`
+  font-size: 0.8em;
+`;
+
+const TaskTitle = styled.div`
+  margin: 24px 0 8px;
+  color: ${(props) => darken(0.1, props.theme.accentColor)};
 `;
 
 const TaskController = styled.div`
@@ -57,7 +66,12 @@ function ToDo({ id, contents, category }: ToDoAtom) {
     <Task>
       <TaskContents>
         <button onClick={onClickRemoveButton}>&times;</button>
-        {contents}
+        <div>
+          <TaskCategory>{category.name}</TaskCategory>
+          <TaskTitle>
+            {contents}
+          </TaskTitle>
+        </div>
       </TaskContents>
       <TaskController>
         {categories.map((aCategory) => (aCategory.id !== category.id && (
